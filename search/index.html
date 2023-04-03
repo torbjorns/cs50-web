@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="index.css">
+        <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+        <title>Search</title>
+    </head>
+    <body>
+        <container class="navcontainer">
+            <a href="/">Basic</a>
+            <a href="/image.html">Image</a>
+            <a href="/advanced.html">Advanced</a>
+        </container>
+        <container class="imagecontainer">
+            <a href="https://www.google.com">
+                <img src="googlelogo.png" alt="Google logo" height="100px">  
+            </a>
+        </container>
+        <form action="https://www.google.com/search">
+            <container class="textfieldcontainer">
+                <input type="text" name="q" class="inputfield">
+            </container>
+            <container class="buttoncontainer">
+                <input class="bottombutton" type="submit" value="Google Search">
+            </form>
+                <button class="bottombutton luckybutton">I'm Feeling Lucky</button>
+            </container>
+
+        <script>
+            function addUrl() {
+                var str = $( "form" ).serialize();
+                var finalUrl = "https://www.google.com/search?btnI&"+str;
+                window.location.href = finalUrl;
+            }
+            $( ".luckybutton" ).on( "click", function(e) {
+                e.preventDefault();
+                addUrl();
+            });
+        </script>
+    </body>
+</html>

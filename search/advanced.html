@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="index.css">
+        <title>Search</title>
+    </head>
+    <body>
+        <container class="navcontainer">
+            <div>
+                <img src="googlelogo.png" alt="Google images logo" height="40px">  
+            </div>
+            <div id="filler"></div>
+            <a href="/">Basic</a>
+            <a href="/image.html">Image</a>
+            <a href="/advanced.html">Advanced</a>
+        </container>
+        <div class="centeringdiv">
+            <container class="advancedcontainer">
+                <div class="advancedtitle">
+                    Advanced Search
+                </div>
+                <hr>
+                <form action="https://www.google.com/search">
+                    <div class="advancedform">
+                        <div class="advancedsubtitle">Find pages with...</div>
+                        <div></div>
+                        <div class="advancedtext">all these words:</div>
+                        <input type="text" name="as_q" class="advancedinputfield">
+                        <div class="advancedtext">this exact word or phrase:</div>
+                        <input type="text" name="as_epq" class="advancedinputfield">
+                        <div class="advancedtext">any of these words:</div>
+                        <input type="text" name="as_oq" class="advancedinputfield">
+                        <div class="advancedtext">none of these words:</div>
+                        <input type="text" name="as_eq" class="advancedinputfield">
+                        <div></div>
+                        <div class="buttoncontainer">
+                            <input class="advancedbutton" type="submit" value="Advanced Search">
+                        </div>
+                    </div>
+                </form>
+            </container>            
+        </div>
+    </body>
+</html>
