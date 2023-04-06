@@ -89,9 +89,7 @@ def edit_entry(request, entry):
 
 def rand(request):
     entry_list = util.list_entries()
-    print(entry_list)
     rand_entry = random.choice(entry_list)
-    print(f"The coice is: {rand_entry}")
     content = convert_md_to_html(rand_entry)
     return render(request, "encyclopedia/entry.html", {
         "entry": rand_entry,
