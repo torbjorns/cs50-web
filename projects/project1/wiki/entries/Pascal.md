@@ -1,2 +1,0 @@
-# Pascal
-Only for **nerds**

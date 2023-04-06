@@ -1,2 +1,2 @@
 # R
-This is a language for data science
+A language for data science.
