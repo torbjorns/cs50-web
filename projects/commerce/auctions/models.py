@@ -1,18 +1,27 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
 class User(AbstractUser):
     pass
 
-class Listing(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.CharField(max_length=400)
-    price = models.IntegerField()
-    category = models.CharField(max_length=100)
+class Category(models.Model):
+    categoryName = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.title}, price: {self.price}"
+        return f"{self.categoryName}"
+
+class Listing(models.Model):
+    title = models.CharField(max_length=30)
+    description = models.CharField(max_length=150)
+    price = models.FloatField()
+    imageUrl = models.CharField(max_length=500, default="https://t4.ftcdn.net/jpg/00/89/55/15/360_F_89551596_LdHAZRwz3i4EM4J0NHNHy2hEUYDfXc0j.jpg")
+    category = models.CharField(max_length=100)
+    isActive = models.BooleanField(default=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, related_name="category") 
+
+    def __str__(self):
+        return f"{self.title}"
 
 class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")

@@ -1,7 +1,39 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-
-    TODO
+    <div class="horiz-align">
+      <h2>Active Listings</h2>
+      <form action="{% url 'index' %}" method="POST">
+        {% csrf_token %}
+        <label for="category">Choose a category</label>
+        <select name="category" id="category">
+          <option value="All">All</option>
+          {% for cat in categories %}
+            {% if active_category == cat %}
+              <option value="{{ cat }}" selected="selected">{{ cat }}</option>
+            {% else %}
+              <option value="{{ cat }}">{{ cat }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        <button type="submit">Filter</button>
+      </form>
+    </div>
+    <div class="row mx-3">
+      {% for item in items %}
+        <div class="card mx-3" style="width: 18rem;">
+          <div style="height: 200px; overflow: hidden;">
+            <img class="card-img-top" src="{{ item.imageUrl }}" alt="Card image cap" style="height: 100%; object-fit: cover;">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ item.title }}</h5>
+            <small class="text-muted">{{ item.category }}</small>
+            <p class="card-text">{{ item.description }}</p>
+          </div>
+          <div class="card-footer">
+            <p class="card-text">USD {{ item.price }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
 {% endblock %}
