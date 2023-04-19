@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -37,6 +38,7 @@ def index(request):
             "active_category": category
         })
     
+@login_required
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "items": request.user.watchlist_user.all()
@@ -93,7 +95,7 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-
+@login_required
 def new_listing(request):
     if request.method == "POST":
         form = NewListingForm(request.POST)
@@ -126,11 +128,15 @@ def listing(request, listing_id):
         "watchlist": watchlist
     })
 
+
+@login_required
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     listing.watchlist.add(request.user)
     return HttpResponseRedirect(reverse("listing", args={listing_id,}))
 
+
+@login_required
 def remove_from_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     listing.watchlist.remove(request.user)
