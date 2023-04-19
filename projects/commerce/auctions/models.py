@@ -12,7 +12,7 @@ class Category(models.Model):
 
 class Listing(models.Model):
     title = models.CharField(max_length=30)
-    description = models.CharField(max_length=150)
+    description = models.CharField(max_length=300)
     price = models.FloatField()
     imageUrl = models.CharField(max_length=500, default="https://t4.ftcdn.net/jpg/00/89/55/15/360_F_89551596_LdHAZRwz3i4EM4J0NHNHy2hEUYDfXc0j.jpg")
     category = models.CharField(max_length=100)
