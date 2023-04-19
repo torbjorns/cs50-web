@@ -2,13 +2,14 @@
 
 {% block body %}
     <h2>{{ listing.title }}</h2>
+    <img src="{{ listing.imageUrl }}" alt="{{ listing.title }}" style="height: 300px; width: auto">
     <p>{{ listing.description }}</p>
     <p>Price: USD {{ listing.price }}</p>
     <p>{{ listing.category }}</p>
 
     <div>
         {% if user.is_authenticated %}
-            {% if listing in watchlist %}
+            {% if watchlist %}
                 <a href="{% url 'remove_from_watchlist' listing.id %}">Remove from watchlist</a>
             {% else %}
                 <a href="{% url 'add_to_watchlist' listing.id %}">Add to watchlist</a>

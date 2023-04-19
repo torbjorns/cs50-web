@@ -36,6 +36,11 @@ def index(request):
             "categories": Category.objects.all(),
             "active_category": category
         })
+    
+def watchlist(request):
+    return render(request, "auctions/watchlist.html", {
+        "items": request.user.watchlist_user.all()
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -115,10 +120,7 @@ def new_listing(request):
 
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
-    try:
-        watchlist = request.user.watchlist.all()
-    except:
-        watchlist = {}
+    watchlist = request.user in listing.watchlist.all()
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "watchlist": watchlist
@@ -126,10 +128,10 @@ def listing(request, listing_id):
 
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
-    request.user.watchlist.add(listing)
+    listing.watchlist.add(request.user)
     return HttpResponseRedirect(reverse("listing", args={listing_id,}))
 
 def remove_from_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
-    request.user.watchlist.remove(listing)
+    listing.watchlist.remove(request.user)
     return HttpResponseRedirect(reverse("listing", args={listing_id,}))
