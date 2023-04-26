@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
-
 from .models import User, Listing, Bid, Comment, Category
 
 class NewListingForm(forms.Form):
@@ -21,6 +21,9 @@ class NewListingForm(forms.Form):
     ListingBid = forms.IntegerField(label="StartingBid")
     ListingImageUrl = forms.CharField(label="Image URL")
     ListingCategory = forms.ChoiceField(choices=listingCategories, label="Category")
+
+class CommentForm(forms.Form):
+    CommentContent = forms.CharField(label='Add comment', widget=forms.Textarea(attrs={'rows': 4}))
 
 def index(request):
     if request.method == "GET" or request.POST.get('category') == "All":
@@ -123,9 +126,20 @@ def new_listing(request):
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     watchlist = request.user in listing.watchlist.all()
+    comments = Comment.objects.filter(listing=listing)
+    orig_price = Listing.objects.get(pk=listing_id).price
+    highest_bid = Bid.objects.filter(listing=listing).order_by('amount').last()
+    if highest_bid:
+        min_value = highest_bid.amount+1
+    else:
+        min_value = orig_price
     return render(request, "auctions/listing.html", {
         "listing": listing,
-        "watchlist": watchlist
+        "watchlist": watchlist,
+        "comments": comments,
+        "comment_form": CommentForm(),
+        "bid_form": BidForm(min_value=min_value),
+        "highest_bid": highest_bid
     })
 
 
@@ -133,11 +147,51 @@ def listing(request, listing_id):
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     listing.watchlist.add(request.user)
-    return HttpResponseRedirect(reverse("listing", args={listing_id,}))
+    return HttpResponseRedirect(reverse("listing", args={listing_id, }))
 
 
 @login_required
 def remove_from_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     listing.watchlist.remove(request.user)
-    return HttpResponseRedirect(reverse("listing", args={listing_id,}))
+    return HttpResponseRedirect(reverse("listing", args={listing_id, }))
+
+@login_required
+def add_comment(request, listing_id):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        listing = Listing.objects.get(pk=listing_id)
+        if form.is_valid():
+            CommentContent = form.cleaned_data["CommentContent"]
+
+            # create new comment
+            comment = Comment.objects.create(user=request.user, listing=listing, content=CommentContent, timestamp=timezone.now())
+            comment.save()
+    return HttpResponseRedirect(reverse("listing", args={listing_id, }))
+
+class BidForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        min_value = kwargs.pop('min_value', None)
+        super().__init__(*args, **kwargs)
+        self.fields['BidValue'] = forms.IntegerField(
+            label='Bid on this item', min_value=min_value
+        )
+
+@login_required
+def bid_on_item(request, listing_id):
+    if request.method == "POST":
+        listing = Listing.objects.get(pk=listing_id)
+        orig_price = Listing.objects.get(pk=listing_id).price
+        highest_bid = Bid.objects.filter(listing=listing).order_by('amount').last()
+        if highest_bid:
+            min_value = highest_bid.amount+1
+        else:
+            min_value = orig_price
+        form = BidForm(request.POST, min_value=min_value)
+        if form.is_valid():
+            BidValue = form.cleaned_data["BidValue"]
+
+            # create new comment
+            bid = Bid.objects.create(user=request.user, listing=listing, amount=BidValue, timestamp=timezone.now())
+            bid.save()
+    return HttpResponseRedirect(reverse("listing", args={listing_id, }))
