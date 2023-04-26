@@ -1,7 +1,8 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+  <div class="container">
+    <h2>Watchlist</h2>
     <div class="row mx-3">
       {% for item in items %}
           <div class="card mx-3" style="width: 18rem;">
@@ -20,4 +21,5 @@
           </div>
       {% endfor %}
     </div>
+  </div>
 {% endblock %}

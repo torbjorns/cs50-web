@@ -19,7 +19,8 @@ class Listing(models.Model):
     isActive = models.BooleanField(default=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user")
     watchlist = models.ManyToManyField(User, blank=True, related_name="watchlist_user")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, related_name="category") 
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, related_name="category")
+    isClosed = models.BooleanField()
 
     def __str__(self):
         return f"{self.title}"
@@ -28,14 +29,16 @@ class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     amount = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.listing} bid: {self.amount}"
 
 class Comment(models.Model):
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
-    comment = models.CharField(max_length=400)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user}: {self.comment}"
+        return f'{self.user.username} on {self.listing.title}'

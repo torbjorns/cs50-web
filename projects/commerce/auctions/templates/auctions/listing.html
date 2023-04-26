@@ -2,36 +2,81 @@
 
 {% block body %}
 <div class="container">
+    <h2>{{ listing.title }}</h2>
     <div class="card">
         <div class="row">
             <div class="col-sm">
                 <img src="{{ listing.imageUrl }}" alt="{{ listing.title }}" class="img-fluid">
             </div>
-            <div class="col-sm">
-                <h2>{{ listing.title }}</h2>
-                <p>{{ listing.category }}</p>
-                <p>{{ listing.description }}</p>
-                <p>Price: USD {{ listing.price }}</p>
+            <div class="col-sm item-column">
+                <div>{{ listing.category }}</div>
+                <div>{{ listing.description }}</div>
+                <div>
+                    {% if highest_bid %}
+                        <div>Current Bid: {{ highest_bid.amount }}</div>
+                    {% else %}
+                        <div>Price: USD {{ listing.price }}</div>
+                    {% endif %}
+                    {% if listing.owner == request.user %}
+                        <div>You posted this item</div>
+                    {% else %}
+                        {% if user.is_authenticated %}
+                            <form method="post" action="{% url 'bid_on_item' listing.id %}">
+                                {% csrf_token %}
+                                {{ bid_form }} USD
+                                <button type="submit" class="btn btn-outline-dark btn-sm">Bid</button>
+                            </form>
+                        {% else %}
+                            <p>Please <a href="{% url 'login' %}">log in</a> to bid on this item.</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% if user.is_authenticated %}
+                    {% if watchlist %}
+                        <div>
+                            <a href="{% url 'remove_from_watchlist' listing.id %}">Remove from watchlist</a>
+                        </div>
+                    {% else %}
+                        <div>
+                            <a href="{% url 'add_to_watchlist' listing.id %}">Add to watchlist</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-sm">
-        {% if user.is_authenticated %}
-            {% if watchlist %}
-                <a href="{% url 'remove_from_watchlist' listing.id %}">Remove from watchlist</a>
+            <h4>Comments</h4>
+            {% if comments %}
+                <ul class="list-unstyled">
+                    {% for comment in comments %}
+                        <li>
+                            <strong>{{ comment.user.username }}</strong>
+                            <small>{{ comment.timestamp|date:"F j, Y, g:i a" }}</small>
+                            <p>{{ comment.content }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
             {% else %}
-                <a href="{% url 'add_to_watchlist' listing.id %}">Add to watchlist</a>
+                <p>No comments yet.</p>
             {% endif %}
-        {% endif %}
         </div>
-    </div>
-    <div class="row">
         <div class="col-sm">
-            <h3>Comments</h3>
-            
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'add_comment' listing.id %}">
+                    {% csrf_token %}
+                        <div class="vertical_form">
+                            {{ comment_form }}
+                        </div>
+                    <button type="submit" class="btn btn-success btn-sm">Comment</button>
+                </form>
+            {% else %}
+                <p>Please <a href="{% url 'login' %}">log in</a> to add a comment.</p>
+            {% endif %}
         </div>
     </div>
+    
 </div>
 
 {% endblock %}

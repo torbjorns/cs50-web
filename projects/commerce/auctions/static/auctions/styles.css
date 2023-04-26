@@ -10,3 +10,14 @@ body {
     display: flex;
     justify-content: space-between;
 }
+
+.item-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.vertical_form {
+    display: flex;
+    flex-direction: column;
+}
