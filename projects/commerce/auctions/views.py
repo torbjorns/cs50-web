@@ -149,7 +149,6 @@ def add_to_watchlist(request, listing_id):
     listing.watchlist.add(request.user)
     return HttpResponseRedirect(reverse("listing", args={listing_id, }))
 
-
 @login_required
 def remove_from_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
@@ -194,4 +193,12 @@ def bid_on_item(request, listing_id):
             # create new comment
             bid = Bid.objects.create(user=request.user, listing=listing, amount=BidValue, timestamp=timezone.now())
             bid.save()
+    return HttpResponseRedirect(reverse("listing", args={listing_id, }))
+
+@login_required
+def close_auction(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    listing.isActive = False
+    listing.save()
+    print(f"Closing auction {listing.title}")
     return HttpResponseRedirect(reverse("listing", args={listing_id, }))

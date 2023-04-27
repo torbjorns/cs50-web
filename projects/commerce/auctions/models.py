@@ -20,7 +20,6 @@ class Listing(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user")
     watchlist = models.ManyToManyField(User, blank=True, related_name="watchlist_user")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, related_name="category")
-    isClosed = models.BooleanField()
 
     def __str__(self):
         return f"{self.title}"
