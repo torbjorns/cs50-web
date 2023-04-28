@@ -6,7 +6,7 @@
     <div class="card">
         <div class="row">
             <div class="col-sm">
-                <img src="{{ listing.imageUrl }}" alt="{{ listing.title }}" class="img-fluid">
+                <img src="{{ listing.imageUrl }}" alt="{{ listing.title }}" style="height: 300px; object-fit: cover">
             </div>
             <div class="col-sm item-column">
                 <div>{{ listing.category }}</div>
@@ -22,6 +22,7 @@
                     {% else %}
                         <div>Price: {{ listing.price }} USD</div>
                     {% endif %}
+
                     {% if listing.owner == request.user %}
                         {% if listing.isActive %}
                             <div>You posted this item</div>
