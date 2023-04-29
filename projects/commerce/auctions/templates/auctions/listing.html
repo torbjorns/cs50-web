@@ -6,23 +6,16 @@
     <div class="card">
         <div class="row">
             <div class="col-sm">
-                <img src="{{ listing.imageUrl }}" alt="{{ listing.title }}" style="height: 300px; object-fit: cover">
+                <img src="{{ listing.imageUrl }}" alt="{{ listing.title }}" style="max-height: 300px; max-width: 500px; object-fit: cover">
             </div>
             <div class="col-sm item-column">
-                <div>{{ listing.category }}</div>
                 <div>{{ listing.description }}</div>
                 <div>
                     {% if highest_bid %}
-                        {% if listing.isActive %}
-                            <div>Current Bid: {{ highest_bid.amount }} USD</div>
-                        {% else %}
-                            <div>Winning Bid: {{ highest_bid.amount }} USD</div>
-                            <div>Winner: {{ highest_bid.user }}</div>
-                        {% endif %}
+                        <div>Highest Bid: {{ highest_bid.amount }} USD</div>
                     {% else %}
                         <div>Price: {{ listing.price }} USD</div>
                     {% endif %}
-
                     {% if listing.owner == request.user %}
                         {% if listing.isActive %}
                             <div>You posted this item</div>
@@ -30,6 +23,8 @@
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-outline-danger btn-sm">Close auction</button>
                             </form>
+                        {% else %}
+                            <div>Winner: {{ highest_bid.user }}</div>
                         {% endif %}
                     {% else %}
                         {% if listing.isActive %}
