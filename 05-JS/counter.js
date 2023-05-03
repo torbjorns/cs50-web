@@ -1,14 +1,22 @@
-let counter = 0
+if (!localStorage.getItem('counter')) {
+
+    // If not, set the counter to 0 in local storage
+    localStorage.setItem('counter', 0);
+}
 
 function count() {
+    // Retrieve counter value from local storage
+    let counter = localStorage.getItem('counter');
+
     counter ++;
     document.querySelector('h1').innerHTML = counter;
 
-    if (counter % 10 === 0) {
-        alert(`The count is now ${counter}`); // ${ } adds the variable to the string
-    }
+    // Store counter in local storage
+    localStorage.setItem('counter', counter);
 }
 
-document.addEventListener('DOMContentLoaded', function() { // aEL takes two arguments: the event and the function that should be run, in this case an anonymous function
+document.addEventListener('DOMContentLoaded', function() {
+    // Set heading to the current value inside local storage
+    document.querySelector('h1').innerHTML = localStorage.getItem('counter');
     document.querySelector('button').onclick = count;
 });
