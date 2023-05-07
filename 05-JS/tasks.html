@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <title>Tasks</title>
+     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // by default, the button is disabled
+            document.querySelector('#submit').disabled = true;
+
+            // enable submit button when letters are added
+            document.querySelector('#task').onkeyup = () => {
+                document.querySelector('#submit').disabled = false;
+            }
+
+            document.querySelector('form').onsubmit = () => {
+                const task = document.querySelector('#task').value;
+                if (task.length > 0) { // only if there are letters in the field
+                    document.querySelector('#task').value = '';
+                    document.querySelector('#submit').disabled = true;
+
+                    const li = document.createElement('li');
+                    li.innerHTML = task;
+
+                    document.querySelector('#tasks').append(li);
+                }
+
+                return false; // stop form from submitting
+            }
+        });
+
+     </script>
+</head>
+<body>
+    <h1>Tasks</h1>
+    <ul id="tasks">
+
+    </ul>
+    <form>
+        <input id="task" placeholder="New Task" type="text">
+        <input id="submit" type="submit">
+    </form>
+</body>
+</html>

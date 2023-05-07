@@ -41,6 +41,14 @@ def index(request):
             "active_category": category
         })
     
+def category(request, categoryName):
+    category = Category.objects.get(categoryName=categoryName)
+    return render(request, "auctions/index.html", {
+        "items": Listing.objects.filter(isActive=True, category=category),
+        "categories": Category.objects.all(),
+        "active_category": category
+    })
+
 @login_required
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
@@ -141,6 +149,12 @@ def listing(request, listing_id):
         "bid_form": BidForm(min_value=min_value),
         "highest_bid": highest_bid
     })
+    
+@login_required
+def categories(request):
+    return render(request, "auctions/categories.html", {
+        "categories": Category.objects.all()
+    })
 
 
 @login_required
@@ -200,5 +214,4 @@ def close_auction(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     listing.isActive = False
     listing.save()
-    print(f"Closing auction {listing.title}")
     return HttpResponseRedirect(reverse("listing", args={listing_id, }))
