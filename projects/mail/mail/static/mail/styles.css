@@ -1,3 +1,45 @@
 textarea {
-    min-height: 400px;
+    min-height: 250px;
+
+}.email-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.email {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.email-read {
+    background-color: rgb(231, 230, 230);
+}
+
+.email_timestamp {
+    font-size: small;
+    color: #aaaaaa;
+}
+
+.email_subject {
+    font-size: x-large;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.email div {
+    flex-basis: 15%;
+    margin: 10px;
+}
+
+.email .subject {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.archive_button {
+    margin-top: 10px;
+    margin-right: 10px;
 }
