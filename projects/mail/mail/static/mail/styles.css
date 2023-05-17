@@ -1,7 +1,8 @@
 textarea {
     min-height: 250px;
+}
 
-}.email-container {
+.email-container {
     display: flex;
     flex-direction: column;
 }
@@ -42,4 +43,22 @@ textarea {
 .archive_button {
     margin-top: 10px;
     margin-right: 10px;
+}
+
+#message {
+    position: absolute;
+    top: 85px; 
+    left: 60px; 
+    font-weight: bold;
+    z-index: 1; 
+    background: white; 
+    border: none; 
+  }
+
+.message_red {
+    color: red;
+}
+
+.message_green {
+    color: green;
 }

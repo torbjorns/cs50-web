@@ -19,24 +19,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     fetch('/emails', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
           recipients: recipients,
           subject: subject,
           body: body
       })
     })
-    .then(response => response.json())
-    .then(result => {
-        // Print result
-        console.log(result);
-    })
-    .then(() => {
-      load_mailbox('sent');
+    .then(response => response.json().then(data => ({ status: response.status, body: data })))
+    .then(data => {
+      if (data.status === 201) {
+          showMessage(data.body.message, 'message_green');
+          load_mailbox('sent');
+      } else {
+          showMessage(data.body.error, 'message_red');
+      }  
     })
     .catch(error => {
         console.log('Error:', error);
     });
-
     return false;
   }
 });
@@ -52,6 +55,16 @@ function compose_email(recipient, subject, body) {
   document.querySelector('#compose-recipients').value = recipient;
   document.querySelector('#compose-subject').value = subject;
   document.querySelector('#compose-body').value = body;
+}
+
+function showMessage(message, class_name) {
+  const messageDiv = document.querySelector('#message');
+  messageDiv.innerText = message;
+  messageDiv.className = class_name;
+
+  setTimeout(() => {
+    messageDiv.innerText = '';
+  }, 5000);
 }
 
 function show_email(email_id) {
@@ -121,7 +134,7 @@ function show_email(email_id) {
             load_mailbox('inbox');
           })
           .catch(e => {
-            console.log('Fetch error: ' + e.message);
+            showMessage('Fetch error: ' + e.message);
           });
         });
         
@@ -182,12 +195,23 @@ function load_mailbox(mailbox) {
           emailDiv.className = 'email email-read'
         }
 
+        // Create a shorter timestamp, for easy layout
         let date = new Date(email.timestamp);
-        email.timestamp = date.getMonth() + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes();
+        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+        let day = date.getDate().toString().padStart(2, '0');
+        let hours = date.getHours().toString().padStart(2, '0');
+        let minutes = date.getMinutes().toString().padStart(2, '0');
+
+        email.timestamp = `${month}/${day} ${hours}:${minutes}`;
+
                 
         ['timestamp', 'subject', 'sender'].forEach(key => {
             let element = document.createElement('div');
-            element.innerText = email[key];
+            if (key === 'sender' && current_mailbox === 'sent') {
+              element.innerText = email['recipients'];
+            } else {
+              element.innerText = email[key];
+            }
             if (key === 'subject') {
               element.className = 'subject';
             }
@@ -201,13 +225,21 @@ function load_mailbox(mailbox) {
                 read: true
             })
           })
-          show_email(email.id);
+          .then(() => {
+            show_email(email.id);
+          })
+          .catch(error => {
+              showMessage(error, 'message_red');
+          });
+          
         });
 
         container.appendChild(emailDiv);
       });
 
       document.querySelector('#emails-view').append(container);
-
+  })
+  .catch(error => {
+      showMessage(error, 'message_red');
   });
-}
+};
