@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Webpage</title>
+        <style>
+            @keyframes hide {
+                0% {
+                    opacity: 1;
+                    height: 100%;
+                    line-height: 100%;
+                    padding: 20px;
+                    margin: 10px;
+                }
+                75% {
+                    opacity: 0;
+                    height: 100%;
+                    line-height: 100%;
+                    padding: 20px;
+                    margin: 10px;
+                }
+                100% {
+                    opacity: 0;
+                    height: 0%;
+                    line-height: 0%;
+                    padding: 0px;
+                    margin: 0px;
+                }
+            }
+
+            .post {
+                background-color: #dd8add;
+                height: 100px;
+                padding: 20px;
+                margin: 10px;
+                animation-name: hide;
+                animation-duration: 2s;
+                animation-fill-mode: forwards;
+                animation-play-state: paused;
+            }
+
+            body {
+                padding-bottom: 50px;
+            }
+
+            .hide {
+                text-align: right;
+            }
+        </style>
+        <script src="{% static 'posts/script.js' %}"></script>
+    </head>
+    <body>
+        <div id="posts">
+        </div>
+    </body>
+</html>
