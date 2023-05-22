@@ -8,7 +8,7 @@ jobs:
       run:
         working-directory: ./04-SQL/airline
     steps: # what steps should run
-    - uses: actions/checkout@v2 # github-specific action, checks out the repo code and allows running it
+    - uses: actions/checkout@v3 # github-specific action, checks out the repo code and allows running it
     - name: Run Django unit tests in the airline directory # just my description
       run: |
         pip3 install --user django 
