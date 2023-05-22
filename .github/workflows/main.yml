@@ -10,6 +10,6 @@ jobs:
     steps: # what steps should run
     - uses: actions/checkout@v2 # github-specific action, checks out the repo code and allows running it
     - name: Run Django unit tests in the airline directory # just my description
-      run:
+      run: |
         pip3 install --user django 
         python3 manage.py test
