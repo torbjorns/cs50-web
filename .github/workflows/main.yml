@@ -5,8 +5,8 @@ jobs:
   test_project: # name of the project
     runs-on: ubuntu-latest # what sort of machine - github vm
     defaults:
-    run:
-      working-directory: ./04-SQL/airline
+      run:
+        working-directory: ./04-SQL/airline
     steps: # what steps should run
     - uses: actions/checkout@v2 # github-specific action, checks out the repo code and allows running it
     - name: Run Django unit tests in the airline directory # just my description
