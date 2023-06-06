@@ -1,0 +1,21 @@
+# using v 3 of docker-compose
+version: '3'
+
+
+services:
+    db:
+        # db sets up our database container based on an image already written by Postgres.
+        image: postgres
+
+    # sets up our server’s container by instructing Docker to:
+    web:
+        # Use the Dockerfile within the current directory.
+        build: .
+
+        # current directory should correspond with the app directory in the container
+        volumes:
+            - .:/usr/src/app
+
+        # Link port 8000 within the container to port 8000 on our computer.
+        ports:
+            - "8000:8000"
